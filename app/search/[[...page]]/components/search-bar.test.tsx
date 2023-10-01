@@ -1,10 +1,4 @@
-import {
-  screen,
-  render,
-  fireEvent,
-  waitFor,
-  waitForElementToBeRemoved,
-} from "@testing-library/react";
+import { screen, render, fireEvent } from "@testing-library/react";
 import SearchBar from "./search-bar";
 import userEvent from "@testing-library/user-event";
 
@@ -18,32 +12,13 @@ jest.mock("next/navigation", () => ({
     return {
       pathname: "",
       push: mockPush,
-      // ... whatever else you you call on `router`
     };
   },
 }));
 
-// There is a problem with waitForElementToBeRemoved and this component
-export const waitForLoaderToBeRemoved = async () => {
-  try {
-    await waitFor(() => {
-      const loader = screen.queryByText("loading");
-      expect(loader).not.toBeInTheDocument();
-    });
-  } catch (e: any) {
-    if (e.message.includes("already removed")) {
-      // sometimes the loader has already been removed when we try to check for it!
-      return;
-    }
-    throw e;
-  }
-};
-
 describe("SearchBar", () => {
-  it("shows the search bar", async () => {
+  it("shows the search bar", () => {
     render(<SearchBar />);
-
-    await waitForLoaderToBeRemoved();
 
     const searchButton = screen.getByText("Search");
     fireEvent.click(searchButton);
@@ -53,8 +28,6 @@ describe("SearchBar", () => {
 
   it("allows to search by the term example", async () => {
     render(<SearchBar />);
-
-    await waitForLoaderToBeRemoved();
 
     const searchBar = screen.getByRole("search");
     const searchButton = screen.getByText("Search");

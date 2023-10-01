@@ -1,11 +1,17 @@
 import Link from "next/link";
 import cln from "classnames";
+import routesPaths from "@/app/routes";
 
 type PaginatorProps = {
   page: number;
   totalPages: number;
   query: string;
 };
+
+const getPaginationPage = (page: number, query: string) =>
+  (routesPaths.search.getPathWithQuery &&
+    routesPaths.search.getPathWithQuery(page.toString(), query)) ||
+  routesPaths.search.path;
 
 export default function Paginator({ page, query, totalPages }: PaginatorProps) {
   return (
@@ -14,7 +20,7 @@ export default function Paginator({ page, query, totalPages }: PaginatorProps) {
         className={cln("btn join-item", {
           "btn-disabled": page === 1,
         })}
-        href={`/search/${page - 1}`}
+        href={getPaginationPage(page - 1, query)}
       >
         Previous
       </Link>
@@ -22,7 +28,7 @@ export default function Paginator({ page, query, totalPages }: PaginatorProps) {
         className={cln("btn join-item", {
           "btn-disabled": page === totalPages,
         })}
-        href={`/search/${page + 1}?query=${query}`}
+        href={getPaginationPage(page + 1, query)}
       >
         Next
       </Link>
